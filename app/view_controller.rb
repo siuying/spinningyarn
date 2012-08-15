@@ -3,11 +3,23 @@ class ViewController < UIViewController
   
   def viewWillAppear animated
     super
-    gameCenterButton.when UIControlEventTouchDown do
+
+    # this button, created by IB, will cause crash if tapped twice
+    gameCenterButton.when(UIControlEventTouchDown) do
       matchRequest
     end
-    # gameCenterButton.addTarget self, action: 'matchRequest', forControlEvents: UIControlEventTouchDown
-    textInputField.when UIControlEventEditingDidEndOnExit do
+
+    # this button, created manually, will not have the problem
+    @button = UIButton.buttonWithType(UIButtonTypeRoundedRect)
+    @button.setTitle("test", forState:UIControlStateNormal)
+    @button.frame = [[4,4], [60,20]]
+    self.view.addSubview(@button)
+
+    @button.when(UIControlEventTouchDown) do
+      matchRequest
+    end
+
+    textInputField.when(UIControlEventEditingDidEndOnExit) do
       sendTurn
     end
   end
